@@ -1,8 +1,8 @@
 package ru.kata.spring.boot_security.demo.DAO;
 
-
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.Model.Role;
 import ru.kata.spring.boot_security.demo.Model.User;
 
 import javax.persistence.EntityManager;
@@ -61,7 +61,12 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    @Transactional
     public User getUserByUsername(String username) {
-        return (User) entityManager.createQuery("from User where user_name='" + username + "'").getResultList().get(0);
+        User user = (User) entityManager.createQuery("from User where user_name='" + username + "'").getResultList().get(0);
+        for(Role role : user.getRoles()) {
+            role.getPermissions().stream().forEach(System.out::println);
+        }
+        return user;
     }
 }

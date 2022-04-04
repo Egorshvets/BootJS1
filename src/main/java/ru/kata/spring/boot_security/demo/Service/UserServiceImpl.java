@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.Service;
 
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.DAO.UserDAO;
@@ -8,7 +9,7 @@ import ru.kata.spring.boot_security.demo.Model.User;
 
 import java.util.List;
 
-@Service
+@Service("UserDetailsServiceImpl")
 public class UserServiceImpl implements UserService{
 
     private final UserDAO userDAO;
@@ -56,6 +57,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserByUsername(String username) {
+        return userDAO.getUserByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
         return userDAO.getUserByUsername(username);
     }
 }
