@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Adding new User</title>
+</head>
+<body>
+<h1>Add new User</h1>
+<h4>Please, fill in the fields</h4>
+<form th:method="POST" th:action="save" th:object="${user}">
+    <label for="userName">Name</label>
+    <input id = "userName" placeholder="name" type="text" th:field="*{userName}"><br>
+    <label for="email">Email</label>
+    <input id = "email" placeholder="email" type="text" th:field="*{email}" required><br>
+    <label for="age">Age</label>
+    <input id = "age" name="age" placeholder="age" type="number" th:field="*{age}" required><br>
+    <input type="submit" value="add User"/>
+</form>
+</body>
+</html>
