@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.DAO.UserDAO;
+import ru.kata.spring.boot_security.demo.Model.Role;
 import ru.kata.spring.boot_security.demo.Model.User;
 
 import java.util.List;
@@ -23,11 +24,6 @@ public class UserServiceImpl implements UserService{
         return userDAO.getAllUsers();
     }
 
-    @Override
-    @Transactional
-    public void addUser(String userName, String email, int age) {
-        userDAO.addUser(userName, email, age);
-    }
 
     @Override
     public User getUserById(int Id) {
@@ -42,8 +38,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void updateUser(int Id, String userName, String email, int age) {
-        userDAO.updateUser(Id, userName, email, age);
+    public void updateUser(int Id, String userName, String email, int age, String role , String password) {
+        userDAO.updateUser(Id, userName, email, age, role, password);
     }
 
     @Override
@@ -63,5 +59,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userDAO.getUserByUsername(username);
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return userDAO.getAllRoles();
+    }
+
+    @Override
+    public Role getRoleByName(String role) {
+        return userDAO.getRoleByName(role);
     }
 }

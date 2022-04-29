@@ -5,11 +5,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails{
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,17 +33,20 @@ public class User implements UserDetails{
     @Column(name = "password")
     private String password;
 
-    public User(String userName, String email, int age) {
+    public User(String userName, String email, int age, String password) {
         this.userName = userName;
         this.email = email;
         this.age = age;
+        this.password = password;
     }
 
     public User() {
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public void setRoles(Role roles) {
+        Set<Role> roles1 = new HashSet<>();
+        roles1.add(roles);
+        this.roles = roles1;
     }
 
     public int getId() {
@@ -51,10 +55,6 @@ public class User implements UserDetails{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public void setUserName(String userName) {
@@ -77,15 +77,37 @@ public class User implements UserDetails{
         this.age = age;
     }
 
+
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                '}';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
     }
+
+    public void setAuthorities(Set<Role> roles)  {
+        this.roles = roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {this.password = "{noop}" + password;}
+
+
+
+//    public String getRolesNames() {
+//        String roles = "";
+//        for(GrantedAuthority role : getAuthorities()) {
+//            roles += role;
+//            roles += " ";
+//        }
+//        return roles;
+//    }
+
+//    public void setRoles(Set<Role> roles) {
+//        this.roles = roles;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -101,18 +123,13 @@ public class User implements UserDetails{
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> list = new ArrayList<>();
-        for (Role role : getRoles()) {
-            Set<SimpleGrantedAuthority> set = role.getAuthorities();
-            list.addAll(set);
-        }
-        return list;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                '}';
     }
 
     @Override
@@ -139,4 +156,9 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
+
+    public String getStringRole() {
+        return roles.toString();
+    }
+
 }

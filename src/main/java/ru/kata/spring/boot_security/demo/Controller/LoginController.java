@@ -36,9 +36,9 @@ public class LoginController {
 
     @GetMapping("/auth/success")
     public String success(Principal user, ModelMap modelMap, Authentication authentication) {
-        if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("users:write")) {
-            return "redirect:/admin/users/";
-        }
+//        if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("users:write")) {
+//            return "redirect:/admin/users/";
+//        }
         modelMap.addAttribute("user", userService.getUserByUsername(user.getName()));
         return "success";
     }

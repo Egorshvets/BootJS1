@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.DAO;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.Model.Role;
 import ru.kata.spring.boot_security.demo.Model.User;
 
@@ -24,8 +26,8 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public void addUser(String userName, String email, int age) {
-        entityManager.persist(new User(userName, email, age));
+    public void addUser(String userName, String email, int age, String password) {
+        entityManager.persist(new User(userName, email, age, password));
     }
 
     @Override
@@ -39,11 +41,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUser(int Id, String userName, String email, int age) {
+    public void updateUser(int Id, String userName, String email, int age, String role, String password) {
         User user = entityManager.find(User.class, Id);
         user.setUserName(userName);
         user.setAge(age);
         user.setEmail(email);
+        user.setRoles(getRoleByName(role));
+        user.setPassword(password);
         entityManager.merge(user);
 
     }
@@ -64,9 +68,20 @@ public class UserDAOImpl implements UserDAO {
     @Transactional
     public User getUserByUsername(String username) {
         User user = (User) entityManager.createQuery("from User where user_name='" + username + "'").getResultList().get(0);
-        for(Role role : user.getRoles()) {
-            role.getPermissions().stream().forEach(System.out::println);
+        for(GrantedAuthority role : user.getAuthorities()) {
+            role.getAuthority();
         }
         return user;
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return entityManager.createQuery("from Role", Role.class).getResultList();
+    }
+
+    @Override
+    public Role getRoleByName(String role) {
+        Role role1 = (Role) entityManager.createQuery("from Role where role='" + role + "'").getResultList().get(0);
+        return role1;
     }
 }

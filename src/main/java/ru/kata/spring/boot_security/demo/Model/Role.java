@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "roles")
-public class Role implements GrantedAuthority{
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,25 +24,29 @@ public class Role implements GrantedAuthority{
     private Set<User> users;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private Set<Permission> permissions;
+
+    public String getRole() {
+        return role;
+    }
+
+
+
+//    public Set<SimpleGrantedAuthority> getAuthorities() {
+//        return getPermissions().stream().map(authority
+//                -> new SimpleGrantedAuthority(authority.getAuthority())).collect(Collectors.toSet());
+//    }
+
+    @Override
+    public String toString() {
+        return "" + role;
+    }
 
     @Override
     public String getAuthority() {
-        String authorities = "";
-       for(Permission permission : permissions) {
-           authorities += permission;
-       }
-       return authorities;
+        return role;
     }
 
-    public Set<Permission> getPermissions() {
-        return permissions;
-    }
 
-    public Set<SimpleGrantedAuthority> getAuthorities() {
-        return getPermissions().stream().map(permission
-                -> new SimpleGrantedAuthority(permission.getPermission())).collect(Collectors.toSet());
-    }
 }
+
+
